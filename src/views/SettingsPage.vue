@@ -38,6 +38,9 @@
 <style lang="scss" scoped>
 .sidebar {
   background-color: var(--sidebar-color);
+  @media (min-width: 768px) {
+    min-height: 100vh;
+  }
 }
 
 .links {

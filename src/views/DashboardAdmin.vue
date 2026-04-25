@@ -204,12 +204,6 @@ const updateUser = () => {
   userEditState.value = !userEditState.value;
 };
 
-// window.addEventListener("click", (e) => {
-//   if (e.target.classList.contains("overlay")) {
-//     userEditState.value = !userEditState.value;
-//   }
-// });
-
 // const user = ref({
 //   email: "",
 //   name: "",
@@ -260,7 +254,7 @@ const updateUser = () => {
 .sidebar {
   background-color: var(--sidebar-color);
   @media (min-width: 768px) {
-    height: 100vh;
+    min-height: 100vh;
   }
 }
 
@@ -348,6 +342,8 @@ const updateUser = () => {
     background-color: #272c2f !important;
     border-color: #363e41 !important;
     color: #fdfffc !important;
+    white-space: nowrap !important;
+    padding: 20px;
   }
   tr th {
     border: none;
