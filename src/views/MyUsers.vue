@@ -2,32 +2,8 @@
   <div class="MyUsers">
     <div class="container-fluid">
       <div class="row justify-content-between">
-        <div class="col-md-2 sidebar text-light">
-          <div class="logo text-center">
-            <h2 class="text-uppercase my-3">Kullab</h2>
-          </div>
-          <ul class="links list-unstyled">
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'dashboard' }"
-                >Dashboard</router-link
-              >
-            </li>
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'users' }"
-                >Users</router-link
-              >
-            </li>
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'settings' }"
-                >Settings</router-link
-              >
-            </li>
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'reports' }"
-                >Reports</router-link
-              >
-            </li>
-          </ul>
+        <div class="col-md-2 sidebar text-light p-0">
+          <SideBar />
         </div>
         <div class="main col-md-10 p-0">
           <NavBar class="mb-3" />
@@ -169,6 +145,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useUsersStore } from "@/stores/usersStore";
+import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 const userStore = useUsersStore();
 const userEditState = ref(false);
@@ -240,38 +217,7 @@ const addUser = () => {
 .cursor-pointer {
   cursor: pointer;
 }
-.sidebar {
-  background-color: var(--sidebar-color);
-  @media (min-width: 768px) {
-    min-height: 100vh;
-  }
-}
 
-.links {
-  li {
-    a {
-      transition: 0.4s;
-      &.router-link-active,
-      &:hover {
-        background-color: #1a3639 !important;
-        padding: 10px;
-        border-radius: 5px;
-        position: relative;
-        &::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 4px;
-          background-color: #1aaa8f;
-          border-top-right-radius: 2px;
-          border-bottom-right-radius: 2px;
-        }
-      }
-    }
-  }
-}
 .main {
   .header {
     input,

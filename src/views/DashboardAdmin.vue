@@ -3,31 +3,7 @@
     <div class="container-fluid mx-3 mx-md-0">
       <div class="row">
         <div class="col-md-2 sidebar text-light">
-          <div class="logo text-center">
-            <h2 class="text-uppercase my-3">Kullab</h2>
-          </div>
-          <ul class="links list-unstyled">
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'dashboard' }"
-                >Dashboard</router-link
-              >
-            </li>
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'users' }"
-                >Users</router-link
-              >
-            </li>
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'settings' }"
-                >Settings</router-link
-              >
-            </li>
-            <li class="p-2 mb-2">
-              <router-link class="text-decoration-none text-light" :to="{ name: 'reports' }"
-                >Reports</router-link
-              >
-            </li>
-          </ul>
+          <SideBar />
         </div>
         <div class="col-md-10 p-0">
           <NavBar />
@@ -86,7 +62,7 @@
             </div>
           </div>
           <div class="table">
-            <div class="responsive-table mx-4 px-1">
+            <div class="responsive-table mx-4">
               <table class="table table-hover">
                 <thead>
                   <tr>
@@ -166,6 +142,7 @@
 </template>
 
 <script setup>
+import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -258,32 +235,6 @@ const updateUser = () => {
   }
 }
 
-.links {
-  li {
-    a {
-      transition: 0.4s;
-      &.router-link-active,
-      &:hover {
-        background-color: #1a3639 !important;
-        padding: 10px;
-        border-radius: 5px;
-        position: relative;
-        &::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 4px;
-          background-color: #1aaa8f;
-          border-top-right-radius: 2px;
-          border-bottom-right-radius: 2px;
-        }
-      }
-    }
-  }
-}
-
 .cards {
   > div {
     background-color: #272c2f !important;
@@ -323,7 +274,6 @@ const updateUser = () => {
   }
 }
 .responsive-table {
-  background-color: #272c2f !important;
   .header {
     background-color: #272c2f !important;
     .title {

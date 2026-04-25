@@ -4,6 +4,10 @@ export const useUsersStore = defineStore("users", {
     users: [],
     currentUser: null,
     isAuthenticated: false,
+    admin: {
+      name: "admin",
+      password: "admin",
+    },
   }),
   getters: {
     totalUsers() {
@@ -21,6 +25,10 @@ export const useUsersStore = defineStore("users", {
       if (storageCurrentUser && storageAuthenticated === "true") {
         this.isAuthenticated = true;
         this.currentUser = storageCurrentUser;
+      }
+
+      if (localStorage.getItem("newPass")) {
+        this.admin.password = localStorage.getItem("newPass");
       }
     },
     storeUser(user) {

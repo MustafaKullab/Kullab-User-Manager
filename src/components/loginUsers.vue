@@ -63,10 +63,7 @@ import { useUsersStore } from "../stores/usersStore";
 
 const router = useRouter();
 const userStore = useUsersStore();
-const admin = {
-  name: "admin",
-  password: "admin",
-};
+
 const inputName = ref("");
 const inputPassword = ref("");
 const show = ref(false);
@@ -92,7 +89,10 @@ const signInAdmin = () => {
   } else if (!inputPassword.value) {
     validateMsg.value = "Please enter your password";
     return;
-  } else if (inputName.value === admin.name && inputPassword.value === admin.password) {
+  } else if (
+    inputName.value === userStore.admin.name &&
+    inputPassword.value === userStore.admin.password
+  ) {
     userStore.currentUser = "admin";
     userStore.isAuthenticated = true;
     localStorage.setItem("currentUser", "admin");
