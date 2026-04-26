@@ -1,8 +1,8 @@
 <template>
   <div class="MyUsers">
     <div class="container-fluid">
-      <div class="row justify-content-between">
-        <div class="col-md-2 sidebar text-light p-0">
+      <div class="sp row justify-content-between">
+        <div class="col-md-2 sidebar text-light">
           <SideBar />
         </div>
         <div class="main col-md-10 p-0">
@@ -11,14 +11,14 @@
             <div class="titleSection">
               <div class="title text-light">
                 <h3 class="m-0 mb-1">Users</h3>
-                <p>Users Management</p>
+                <p>Manage and monitor your system users</p>
               </div>
               <form>
-                <div class="input-group">
+                <div class="input-group search-input">
                   <div class="input-group-text"><i class="bi bi-search"></i></div>
                   <input
                     type="text"
-                    placeholder="Search Users..."
+                    placeholder="Search by name or email..."
                     class="form-control"
                     v-model="searchResult"
                   />
@@ -26,8 +26,8 @@
               </form>
             </div>
             <div class="addSection">
-              <button class="btn btn-info text-light" @click="toggleAdduserState">
-                <i class="bi bi-plus-lg"></i> Add New User
+              <button class="btn btn-outline-secondary text-light" @click="toggleAdduserState">
+                <i class="bi bi-plus-lg"></i> Add User
               </button>
             </div>
           </div>
@@ -73,15 +73,17 @@
       <div class="overlay" v-if="userEditState" @click.self="userEditState = false">
         <div class="userEdit">
           <div class="title">
-            <h2 class="text-light">User Update</h2>
-            <p>User id is {{ userEditId }}</p>
+            <h2 class="text-light">Edit User Profile</h2>
+            <p class="my-3">Editing User ID: {{ userEditId }}</p>
           </div>
           <form>
-            <select name="edit" id="edit" v-model="typeToUpdate.type">
-              <option value="name">Name</option>
-              <option value="email">Email</option>
-              <option value="password">Password</option>
-            </select>
+            <a-select
+              v-model:value="typeToUpdate.type"
+              style="width: 200px"
+              :options="typeOptions"
+              placeholder="Select field to edit"
+              class="custom-select"
+            />
             <input
               type="text"
               placeholder="New Name"
@@ -103,6 +105,9 @@
               v-model="typeToUpdate.newVal"
               v-if="typeToUpdate.type === 'password'"
             />
+            <div class="validateMsg" v-if="validateMsg">
+              <p class="my-1 text-danger">{{ validateMsg }}</p>
+            </div>
             <button class="btn w-100 mb-0 text-light" @click.prevent="updateUser">
               Update User
             </button>
@@ -132,7 +137,7 @@
               />
             </div>
             <div class="validateMsg">
-              <p class="text-danger">{{ userExist }}</p>
+              <p class="m-0 text-danger">{{ validateMsg }}</p>
             </div>
             <button class="btn text-light" @click.prevent="addUser">Add User</button>
           </form>
@@ -143,43 +148,58 @@
 </template>
 
 <script setup>
+import { toast } from "vue-sonner";
 import { computed, ref } from "vue";
 import { useUsersStore } from "@/stores/usersStore";
 import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
+
 const userStore = useUsersStore();
 const userEditState = ref(false);
 const addNewUserState = ref(false);
-const userExist = ref("");
+const validateMsg = ref("");
 const userEditId = ref(0);
 const searchResult = ref("");
 const typeToUpdate = ref({
   type: "name",
   newVal: "",
 });
+const typeOptions = [
+  { value: "name", label: "Name" },
+  { value: "email", label: "Email" },
+  { value: "password", label: "Password" },
+];
 const user = ref({
   email: "",
   name: "",
   password: "",
 });
+const regxPass = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+const regxEmail =
+  /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
 const deleteUser = (id) => {
   userStore.deleteUser(Number(id));
+  toast.error("User removed");
 };
 
 const editUser = (id) => {
   userEditState.value = !userEditState.value;
   userEditId.value = id;
+  validateMsg.value = "";
 };
 
 const updateUser = () => {
   if (!typeToUpdate.value.newVal) {
+    validateMsg.value = "Value is required.";
     return;
   }
   userStore.updateUser(Number(userEditId.value), typeToUpdate.value);
   userEditId.value = "";
   typeToUpdate.value.newVal = "";
   userEditState.value = !userEditState.value;
+  toast.info("User Updated");
+  validateMsg.value = "";
 };
 
 const filterUsers = computed(() => {
@@ -191,33 +211,47 @@ const filterUsers = computed(() => {
 
 const toggleAdduserState = () => {
   addNewUserState.value = !addNewUserState.value;
+  validateMsg.value = "";
 };
 
 const addUser = () => {
   const checkUser = userStore.users.find((us) => us.email === user.value.email);
   if (!user.value.email || !user.value.name || !user.value.password) {
-    userExist.value = "Fill All Fields";
+    validateMsg.value = "Please fill in all user details.";
     return;
   } else if (checkUser) {
-    userExist.value = "User Is Exist!";
+    validateMsg.value = "Email already exists.";
+    return;
+  } else if (!regxEmail.test(user.value.email)) {
+    validateMsg.value = "Invalid email address.";
+    return;
+  } else if (!regxPass.test(user.value.password)) {
+    validateMsg.value = "Weak password. Use 8+ characters.";
     return;
   }
   userStore.storeUser({ ...user.value, id: Date.now() });
+  toast.success("User created!");
   user.value = {
     email: "",
     name: "",
     password: "",
   };
   addNewUserState.value = !addNewUserState.value;
-  userExist.value = "";
+  validateMsg.value = "";
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .cursor-pointer {
   cursor: pointer;
 }
 
+.sidebar {
+  background-color: var(--sidebar-color);
+  @media (min-width: 768px) {
+    min-height: 100vh;
+  }
+}
 .main {
   .header {
     input,
@@ -232,6 +266,17 @@ const addUser = () => {
     }
     input::placeholder {
       color: #7d848a;
+    }
+    .search-input {
+      input {
+        @media (max-width: 767px) {
+          width: 130px;
+        }
+      }
+    }
+    .input-group-text,
+    input {
+      border: 2px solid #343b43 !important;
     }
   }
   .responsive-table {
@@ -288,7 +333,8 @@ const addUser = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  .addNewUser {
+  .addNewUser,
+  .userEdit {
     padding: 20px;
     background-color: var(--background-color);
     border-radius: 10px;
@@ -322,6 +368,53 @@ const addUser = () => {
       }
     }
   }
+}
+
+.custom-select {
+  .ant-select-selector {
+    background-color: #272c2f !important;
+    color: #adadaf !important;
+    border-color: var(--border-color) !important;
+    &:focus {
+      color: white !important;
+    }
+  }
+  .ant-select-focused {
+    color: white !important;
+  }
+}
+.ant-select-open {
+  .ant-select-selection-item {
+    color: white !important;
+  }
+}
+.ant-select-arrow {
+  color: white !important;
+}
+.ant-select-item-option {
+  color: #fff !important;
+}
+
+.ant-select-item-option-active:not(.ant-select-item-option-selected) {
+  background-color: #2f3438 !important;
+}
+
+.ant-select-item-option-selected {
+  background-color: #3a3f44 !important;
+  color: #fff !important;
+}
+
+.ant-select-item-option-selected.ant-select-item-option-active {
+  background-color: #26292b !important;
+}
+.rc-virtual-list-holder-inner {
+  background-color: #3a3f44 !important;
+  border-color: #3a3f44 !important;
+}
+.ant-select-dropdown {
+  background-color: #3a3f44 !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: #3a3f44 !important;
 }
 .fade-enter-active,
 .fade-leave-active {

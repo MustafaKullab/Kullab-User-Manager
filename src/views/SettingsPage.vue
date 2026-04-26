@@ -9,7 +9,7 @@
           <NavBar class="mb-3" />
           <div class="header p-3">
             <div class="title">
-              <h2 class="text-light">Mustafa's Account Preferences</h2>
+              <h2 class="text-light">Account Settings</h2>
             </div>
           </div>
           <div class="bigbox m-3 p-3 border border-2 rounded-3">
@@ -62,16 +62,21 @@
                   />
                   <input
                     type="text"
-                    placeholder="Confirm Password"
+                    placeholder="Re-type New Password"
                     class="form-control mb-3"
                     v-model="confPass"
                   />
-                  <button class="btn changePassBtn" @click="changePass">Change Password</button>
+                  <div class="validateMsg">
+                    <p class="text-danger">{{ validateMsg }}</p>
+                  </div>
+                  <button class="btn changePassBtn" @click.prevent="changePass">
+                    Change Password
+                  </button>
                 </form>
               </div>
             </div>
-            <div class="logOut text-center mt-3" @click.prevent="logout">
-              <router-link class="btn w-50" :to="{ name: 'login' }">Log out</router-link>
+            <div class="logOut text-center mt-3" @click="logout">
+              <router-link class="btn w-50" :to="{ name: 'login' }">Sign Out</router-link>
             </div>
           </div>
         </div>
@@ -86,12 +91,15 @@ import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { useUsersStore } from "@/stores/usersStore";
 import { useRouter } from "vue-router";
+import { toast } from "vue-sonner";
+
 const userStore = useUsersStore();
 const router = useRouter();
 const oldPass = ref("");
 const newPass = ref("");
 const confPass = ref("");
 const validateMsg = ref("");
+const regxPass = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
 const logout = () => {
   localStorage.setItem("isAuthenticated", "false");
@@ -99,23 +107,28 @@ const logout = () => {
   userStore.isAuthenticated = false;
   userStore.currentUser = null;
   router.push({ name: "login" });
+  toast.success("Signed out.");
 };
-console.log(userStore.admin.password);
 const changePass = () => {
   if (!oldPass.value || !newPass.value || !confPass.value) {
-    validateMsg.value = "Not Allow To Let Any Field Empty";
+    validateMsg.value = "All fields are required.";
     return;
   } else if (oldPass.value !== userStore.admin.password) {
-    validateMsg.value = "Old Password Is Wrong";
+    validateMsg.value = "Incorrect current password.";
+    return;
+  } else if (!regxPass.test(newPass.value)) {
+    validateMsg.value = "Password must be 8+ characters.";
     return;
   } else if (newPass.value !== confPass.value) {
-    validateMsg.value = "All New Password must be equal";
+    validateMsg.value = "Passwords don't match.";
     return;
   }
   localStorage.setItem("newPass", newPass.value);
+  toast.success("Password changed.");
   oldPass.value = "";
   newPass.value = "";
   confPass.value = "";
+  validateMsg.value = "";
 };
 </script>
 

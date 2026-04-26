@@ -42,4 +42,9 @@
     }
   }
 }
+.navbar-brand {
+  @media (max-width: 767px) {
+    font-size: 16px !important;
+  }
+}
 </style>

@@ -1,7 +1,10 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { useUsersStore } from "./stores/usersStore";
-
+import { Toaster } from "vue-sonner";
+import "vue-sonner/style.css";
+import Antd from "ant-design-vue";
+import "ant-design-vue/dist/reset.css";
 import App from "./App.vue";
 import router from "./router";
 
@@ -12,5 +15,9 @@ app.use(router);
 
 const userStore = useUsersStore();
 userStore.init();
+
+app.component("Toaster", Toaster);
+
+app.use(Antd);
 
 app.mount("#app");

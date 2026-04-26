@@ -2,9 +2,9 @@
   <div class="LoginUsers">
     <div class="container-lg">
       <div class="row d-flex justify-content-center align-items-center loginRow">
-        <div class="col-md-6">
+        <div class="col-md-5">
           <div class="title text-center">
-            <h1 class="mb-2 text-light">Login / Sign In</h1>
+            <h1 class="mb-2 text-light">Sign In</h1>
             <p class="subtitle">Welcome back to KULLAB</p>
           </div>
           <form class="py-3 px-4 rounded-3">
@@ -15,7 +15,7 @@
                 type="text"
                 id="name"
                 class="form-control"
-                placeholder="Enter Your Name"
+                placeholder="Username"
                 v-model="inputName"
               />
             </div>
@@ -26,7 +26,7 @@
                 type="password"
                 id="pass"
                 class="form-control"
-                placeholder="Enter Your Password"
+                placeholder="Password"
                 v-model="inputPassword"
                 ref="passType"
               />
@@ -44,9 +44,10 @@
             >
               Sign In
             </button>
-            <div class="signUp mt-3 text-start cursor-pointer">
-              <router-link class="text-light text-decoration-none" :to="{ name: 'signup' }"
-                >Sign Up?</router-link
+            <div class="signUp mt-3 text-start cursor-pointer text-light">
+              Don't have an account?
+              <router-link class="text-info text-decoration-none" :to="{ name: 'signup' }"
+                >Sign Up</router-link
               >
             </div>
           </form>
@@ -60,6 +61,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUsersStore } from "../stores/usersStore";
+import { toast } from "vue-sonner";
 
 const router = useRouter();
 const userStore = useUsersStore();
@@ -81,13 +83,19 @@ const showToggle = () => {
 
 const signInAdmin = () => {
   if (!inputName.value && !inputPassword.value) {
-    validateMsg.value = "Not allow to let fields empty";
+    validateMsg.value = "Please enter your credentials.";
     return;
   } else if (!inputName.value) {
-    validateMsg.value = "Please enter your username";
+    validateMsg.value = "Username is required.";
     return;
   } else if (!inputPassword.value) {
-    validateMsg.value = "Please enter your password";
+    validateMsg.value = "Password is required.";
+    return;
+  } else if (
+    inputName.value !== userStore.admin.name ||
+    inputPassword.value !== userStore.admin.password
+  ) {
+    validateMsg.value = "Invalid username or password. Please try again.";
     return;
   } else if (
     inputName.value === userStore.admin.name &&
@@ -98,6 +106,7 @@ const signInAdmin = () => {
     localStorage.setItem("currentUser", "admin");
     localStorage.setItem("isAuthenticated", "true");
     router.push({ name: "dashboard" });
+    toast.success("Welcome back!");
     validateMsg.value = "";
   }
 };

@@ -1,8 +1,8 @@
 <template>
   <div class="SignUpUsers">
     <div class="container-lg">
-      <button class="btn btn-outline-secondary back position-absolute" @click="router.go(-1)">
-        <i class="bi bi-arrow-left"></i> Back
+      <button class="btn btn-secondary back position-absolute" @click="router.go(-1)">
+        <i class="bi bi-arrow-left"></i> Back to Login
       </button>
       <div class="row justify-content-center align-items-center">
         <div class="col-md-5">
@@ -17,7 +17,7 @@
               <input
                 type="text"
                 class="form-control"
-                placeholder="Enter Your Name"
+                placeholder="Pick a username"
                 v-model="user.name"
               />
             </div>
@@ -37,28 +37,26 @@
             <div class="mb-3 input-group">
               <div class="input-group-text"><i class="bi bi-lock"></i></div>
               <input
-                type="password"
+                :type="show1 ? 'text' : 'password'"
                 class="form-control"
                 placeholder="Enter Your Password"
                 v-model="user.password"
-                ref="pass"
               />
-              <div class="show input-group-text cursor-pointer" @click="showToggle1(pass)">
+              <div class="show input-group-text cursor-pointer" @click="showToggle1()">
                 <i class="bi bi-eye" v-if="show1"></i>
                 <i class="bi bi-eye-slash" v-else></i>
               </div>
             </div>
-            <label for="confpassword" class="form-label text-light">Confirm Password : </label>
+            <label for="confpassword" class="form-label text-light">Re-type Password : </label>
             <div class="input-group">
               <div class="input-group-text"><i class="bi bi-lock"></i></div>
               <input
-                type="password"
+                :type="show2 ? 'text' : 'password'"
                 class="form-control"
                 placeholder="Confirm Password"
                 v-model="user.confPass"
-                ref="confPass"
               />
-              <div class="show input-group-text cursor-pointer" @click="showToggle2(confPass)">
+              <div class="show input-group-text cursor-pointer" @click="showToggle2()">
                 <i class="bi bi-eye" v-if="show2"></i>
                 <i class="bi bi-eye-slash" v-else></i>
               </div>
@@ -89,6 +87,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUsersStore } from "@/stores/usersStore";
+import { toast } from "vue-sonner";
+
 const userStore = useUsersStore();
 const router = useRouter();
 const user = ref({
@@ -99,41 +99,37 @@ const user = ref({
 });
 const show1 = ref(false);
 const show2 = ref(false);
-const pass = ref(null);
-const confPass = ref(null);
 const userExist = ref("");
+const regxPass = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+const regxEmail =
+  /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
-// Show And Hide Confirm Password
-const showToggle1 = (password) => {
+const showToggle1 = () => {
   show1.value = !show1.value;
-  if (show1.value === true) {
-    password.type = "text";
-  } else {
-    password.type = "password";
-  }
 };
 
 // Show And Hide Confirm Password
-const showToggle2 = (password) => {
+const showToggle2 = () => {
   show2.value = !show2.value;
-  if (show2.value === true) {
-    password.type = "text";
-  } else {
-    password.type = "password";
-  }
 };
 
 //Sign Up User
 const signUpUser = () => {
   const checkUser = userStore.users.find((us) => us.email === user.value.email);
   if (!user.value.password || !user.value.name || !user.value.email || !user.value.confPass) {
-    userExist.value = "Not allow to let any field empty!";
+    userExist.value = "Please complete all fields.";
     return;
   } else if (checkUser) {
-    userExist.value = "User Is Exist!";
+    userExist.value = "Email already in use.";
+    return;
+  } else if (!regxEmail.test(user.value.email)) {
+    userExist.value = "Invalid email format.";
+    return;
+  } else if (!regxPass.test(user.value.password)) {
+    userExist.value = "Password too weak.";
     return;
   } else if (user.value.password != user.value.confPass) {
-    userExist.value = "Both Password Must Be Equal!";
+    userExist.value = "Passwords don't match.";
     return;
   }
   userStore.storeUser({ ...user.value, id: Date.now() });
@@ -143,6 +139,7 @@ const signUpUser = () => {
     password: "",
     confPass: "",
   };
+  toast.success("Account created successfully!");
   userExist.value = "";
 };
 </script>

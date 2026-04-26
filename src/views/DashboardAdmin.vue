@@ -16,7 +16,7 @@
                   <i class="bi bi-people fs-2"></i>
                 </div>
                 <div class="details text-center text-lg-end">
-                  <p class="m-0">Total Registered Users</p>
+                  <p class="m-0">Total Users</p>
                   <span class="fs-3">{{ totalUsers }}</span>
                 </div>
               </div>
@@ -27,7 +27,7 @@
                   <i class="bi bi-person-vcard fs-2"></i>
                 </div>
                 <div class="details text-center text-lg-end">
-                  <p class="m-0">Admin Logged In</p>
+                  <p class="m-0">Active Admin</p>
                   <span class="fs-3">{{ currentUser }}</span>
                 </div>
               </div>
@@ -38,7 +38,7 @@
                   <i class="bi bi bi-activity fs-2"></i>
                 </div>
                 <div class="details text-center text-lg-end">
-                  <p class="m-0">System Status</p>
+                  <p class="m-0">System: Online</p>
                   <span class="fs-3">Active</span>
                 </div>
               </div>
@@ -48,8 +48,8 @@
             class="header-table mx-4 px-3 d-flex justify-content-between align-items-center rounded-top-2"
           >
             <div class="title rounded-top-2">
-              <h4 class="m-0">Recent User Overview (Mini Table)</h4>
-              <p class="m-0">Recently Joined Users Preview (Last 5)</p>
+              <h4 class="m-0">Recent User</h4>
+              <p class="m-0">Latest 5 registrations.</p>
             </div>
             <div
               class="link d-flex gap-2 p-2 cursor-pointer"
@@ -58,7 +58,7 @@
               <div class="icon">
                 <i class="bi bi-box-arrow-up-right"></i>
               </div>
-              <div class="text">Go To Manage Users</div>
+              <div class="text">View All Users.</div>
             </div>
           </div>
           <div class="table">
@@ -101,15 +101,17 @@
       <div class="overlay" v-if="userEditState" @click.self="userEditState = false">
         <div class="userEdit">
           <div class="title">
-            <h2 class="text-light">User Update</h2>
+            <h2 class="text-light">Edit User Profile</h2>
             <p>User id is {{ userEditId }}</p>
           </div>
           <form>
-            <select name="edit" id="edit" v-model="typeToUpdate.type">
-              <option value="name">Name</option>
-              <option value="email">Email</option>
-              <option value="password">Password</option>
-            </select>
+            <a-select
+              v-model:value="typeToUpdate.type"
+              style="width: 200px"
+              :options="typeOptions"
+              placeholder="Select field to edit"
+              class="custom-select"
+            />
             <input
               type="text"
               placeholder="New Name"
@@ -142,6 +144,7 @@
 </template>
 
 <script setup>
+import { toast } from "vue-sonner";
 import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import { ref } from "vue";
@@ -161,9 +164,15 @@ const typeToUpdate = ref({
   type: "name",
   newVal: "",
 });
+const typeOptions = [
+  { value: "name", label: "Name" },
+  { value: "email", label: "Email" },
+  { value: "password", label: "Password" },
+];
 
 const deleteUser = (id) => {
   userStore.deleteUser(Number(id));
+  toast.error("User removed successfully.");
 };
 
 const editUser = (id) => {
@@ -173,51 +182,15 @@ const editUser = (id) => {
 
 const updateUser = () => {
   if (!typeToUpdate.value.newVal) {
+    toast.error("New value cannot be empty.");
     return;
   }
   userStore.updateUser(Number(userEditId.value), typeToUpdate.value);
   userEditId.value = "";
   typeToUpdate.value.newVal = "";
   userEditState.value = !userEditState.value;
+  toast.info("User updated successfully.");
 };
-
-// const user = ref({
-//   email: "",
-//   name: "",
-//   password: "",
-// });
-// const delId = ref("");
-// const delMsg = ref("");
-// const userId = ref("");
-// // const userExist = ref("");
-
-// const addUser = () => {
-//   const checkUser = userStore.users.find((us) => us.email === user.value.email);
-//   if (!user.value.email || !user.value.name || !user.value.password) {
-//     userExist.value = "Fill All Fields";
-//     return;
-//   } else if (checkUser) {
-//     userExist.value = "User Is Exist!";
-//     return;
-//   }
-//   userStore.storeUser({ ...user.value, id: Date.now() });
-//   user.value = {
-//     email: "",
-//     name: "",
-//     password: "",
-//   };
-//   userExist.value = "";
-// };
-
-// const delUser = () => {
-//   if (!delId.value) {
-//     delMsg.value = "Not allow to let field empty";
-//     return;
-//   }
-//   userStore.deleteUser(Number(delId.value));
-//   delId.value = "";
-//   delMsg.value = "";
-// };
 </script>
 
 <style lang="scss" scoped>

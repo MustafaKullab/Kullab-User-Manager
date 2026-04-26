@@ -27,7 +27,7 @@
 .SideBar {
   background-color: var(--sidebar-color);
   @media (min-width: 768px) {
-    min-height: 100vh;
+    min-height: 100%;
   }
   .links {
     li {
