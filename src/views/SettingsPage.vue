@@ -33,12 +33,12 @@
                 </div>
 
                 <div class="adminDetails my-3">
-                  <div class="fullName d-flex justify-content-between align-items-center">
-                    <p class="m-0">Full Name</p>
+                  <div class="fullName d-flex align-items-center">
+                    <p class="m-0 me-5">Name</p>
                     <span class="boxVal rounded-3 border border-2">Mustafa Khalil Kullab</span>
                   </div>
-                  <div class="email my-3 d-flex justify-content-between align-items-center">
-                    <p class="m-0">Email Address</p>
+                  <div class="email my-3 d-flex gap-1 align-items-center">
+                    <p class="m-0 me-5">Email</p>
                     <span class="boxVal rounded-3 border border-2">mustafakullab@gmail.com</span>
                   </div>
                 </div>
@@ -124,7 +124,7 @@ const changePass = () => {
     return;
   }
   localStorage.setItem("newPass", newPass.value);
-  toast.success("Password changed.");
+  location.reload();
   oldPass.value = "";
   newPass.value = "";
   confPass.value = "";
