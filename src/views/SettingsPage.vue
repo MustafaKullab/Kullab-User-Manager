@@ -125,6 +125,7 @@ const changePass = () => {
   }
   localStorage.setItem("newPass", newPass.value);
   location.reload();
+  location.href = "/settings";
   oldPass.value = "";
   newPass.value = "";
   confPass.value = "";
