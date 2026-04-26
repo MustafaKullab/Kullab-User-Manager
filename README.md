@@ -1,8 +1,8 @@
 # Kullab User Manager
 
-A simple user management dashboard built with **Vue 3** and **Pinia**, created as a practice project to demonstrate global state management, authentication flow, and CRUD operations.
+A simple user management dashboard built with **Vue 3** and **Pinia**, developed as a practical project to demonstrate global state management, authentication flow, and CRUD operations in a real Vue application.
 
-This project was mainly built to apply and understand **Pinia state management in a real Vue application**.
+The main focus of this project is to apply and understand **Pinia** as a state management solution in a structured frontend application.
 
 ---
 
@@ -13,49 +13,59 @@ To access the system, use the following credentials:
 - **Username:** admin  
 - **Password:** admin  
 
-> After login, you will be redirected to the dashboard where you can manage users.
+> After logging in, you will be redirected to the dashboard where you can manage users.
 
 ---
 
 ## 📌 Project Purpose
 
-This project was developed as a hands-on practice to:
+This project was built as a learning exercise to:
 
-- Learn and apply **Pinia** as a state management solution
-- Understand global state handling in Vue 3
-- Build a simple authentication flow
-- Implement basic CRUD operations (Create, Read, Update, Delete)
-- Structure a small admin-style dashboard
+- Practice and understand **Pinia state management**
+- Build a basic authentication flow (login & signup)
+- Handle global state across multiple pages
+- Implement CRUD operations (Create, Read, Update, Delete)
+- Simulate a simple admin-style user management system
 
 ---
 
 ## ⚙️ How It Works
 
-### 1. Authentication
-- The app starts with a login page.
-- When the user enters valid credentials (admin/admin), authentication state is stored using **Pinia**.
-- After login, the user gains access to the dashboard.
+### 1. Authentication System
+- The application starts with **Login / Signup pages**
+- On successful login, the authentication state is stored using **Pinia**
+- Only authenticated users can access the dashboard
 
 ---
 
-### 2. User Management
+### 2. Signup Flow
+- When a new user signs up, their data is automatically stored
+- The registered user is then added to the **global users list**
+- This means every new signup appears immediately inside the dashboard **Users page**
+- This simulates how user registration would be reflected in a real admin system
+
+---
+
+### 3. User Management Dashboard
 Inside the dashboard, the admin can:
 
-- View all registered users
-- Add new users
-- Edit existing user information
+- View all users (including newly registered users)
+- Add users manually
+- Edit user information
 - Delete users
 
-All user data is managed globally using **Pinia stores**, which keeps the state consistent across the application.
+All data is managed globally using **Pinia stores**, ensuring consistency across the application.
 
 ---
 
-### 3. State Management (Pinia)
-- Pinia is used as the central store for:
-  - Authentication state
-  - Users data
-  - UI state handling
-- This eliminates prop drilling and simplifies state sharing between components.
+### 4. State Management (Pinia)
+Pinia is used as the central state manager for:
+
+- Authentication state (logged in / logged out)
+- Users data (including signup-generated users)
+- Application state synchronization across components
+
+This removes the need for prop drilling and simplifies state handling.
 
 ---
 
@@ -65,7 +75,7 @@ All user data is managed globally using **Pinia stores**, which keeps the state 
 - Pinia
 - Vue Router
 - Vite
-- Bootstrap / UI Styling
+- Bootstrap / Custom Styling
 
 ---
 
@@ -79,14 +89,16 @@ https://kullab-user-management.vercel.app/
 
 Through this project, I gained practical experience in:
 
-- Using Pinia as a modern state management tool in Vue 3
-- Structuring a small-scale frontend application
-- Handling authentication flow in a frontend-only app
-- Managing global state efficiently
-- Building reusable components and clean architecture
+- Using **Pinia** for real-world state management
+- Structuring a Vue 3 application properly
+- Handling authentication flow in frontend applications
+- Connecting signup flow with global state (users list)
+- Building clean and reusable components
+- Managing CRUD operations in a reactive system
 
 ---
 
 ## 📌 Note
 
-This is a **demo project** created for learning purposes and does not include backend integration or real authentication security.
+This is a **learning/demo project**, built to practice frontend development concepts.  
+It does not include backend integration or real production-level authentication security.
