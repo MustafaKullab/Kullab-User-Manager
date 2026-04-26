@@ -117,7 +117,7 @@ const changePass = () => {
     validateMsg.value = "Incorrect current password.";
     return;
   } else if (!regxPass.test(newPass.value)) {
-    validateMsg.value = "Password must be 8+ characters.";
+    validateMsg.value = "Password does not meet the required criteria.";
     return;
   } else if (newPass.value !== confPass.value) {
     validateMsg.value = "Passwords don't match.";

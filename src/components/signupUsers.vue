@@ -126,7 +126,7 @@ const signUpUser = () => {
     userExist.value = "Invalid email format.";
     return;
   } else if (!regxPass.test(user.value.password)) {
-    userExist.value = "Password too weak.";
+    userExist.value = "Password does not meet the required criteria.";
     return;
   } else if (user.value.password != user.value.confPass) {
     userExist.value = "Passwords don't match.";

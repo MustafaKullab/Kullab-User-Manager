@@ -8,6 +8,7 @@ export const useUsersStore = defineStore("users", {
       name: "admin",
       password: "admin",
     },
+    regxPass: /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
   }),
   getters: {
     totalUsers() {
@@ -48,6 +49,9 @@ export const useUsersStore = defineStore("users", {
       } else if (userDetails.type === "email") {
         myUser.email = userDetails.newVal;
       } else {
+        if (!this.regxPass.test(userDetails.newVal)) {
+          return;
+        }
         myUser.password = userDetails.newVal;
       }
       localStorage.setItem("users", JSON.stringify(this.users));
