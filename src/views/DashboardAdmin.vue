@@ -160,6 +160,7 @@ const totalUsers = activeStore.totalUsers;
 const currentUser = activeStore.currentUser;
 const userEditState = ref(false);
 const userEditId = ref(0);
+const regxPass = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 const typeToUpdate = ref({
   type: "name",
   newVal: "",
@@ -183,6 +184,9 @@ const editUser = (id) => {
 const updateUser = () => {
   if (!typeToUpdate.value.newVal) {
     toast.error("New value cannot be empty.");
+    return;
+  } else if (!regxPass.test(typeToUpdate.value.newVal)) {
+    toast.error("Password does not meet the required criteria.");
     return;
   }
   userStore.updateUser(Number(userEditId.value), typeToUpdate.value);

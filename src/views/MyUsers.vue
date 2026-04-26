@@ -193,6 +193,9 @@ const updateUser = () => {
   if (!typeToUpdate.value.newVal) {
     validateMsg.value = "Value is required.";
     return;
+  } else if (!regxPass.test(typeToUpdate.value.newVal)) {
+    validateMsg.value = "Password does not meet the required criteria.";
+    return;
   }
   userStore.updateUser(Number(userEditId.value), typeToUpdate.value);
   userEditId.value = "";
@@ -226,7 +229,7 @@ const addUser = () => {
     validateMsg.value = "Invalid email address.";
     return;
   } else if (!regxPass.test(user.value.password)) {
-    validateMsg.value = "Weak password. Use 8+ characters.";
+    validateMsg.value = "Password does not meet the required criteria.";
     return;
   }
   userStore.storeUser({ ...user.value, id: Date.now() });
