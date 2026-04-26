@@ -193,7 +193,7 @@ const updateUser = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .cursor-pointer {
   cursor: pointer;
 }
@@ -318,6 +318,54 @@ const updateUser = () => {
     }
   }
 }
+
+.custom-select {
+  .ant-select-selector {
+    background-color: #272c2f !important;
+    color: #adadaf !important;
+    border-color: var(--border-color) !important;
+    &:focus {
+      color: white !important;
+    }
+  }
+  .ant-select-focused {
+    color: white !important;
+  }
+}
+.ant-select-open {
+  .ant-select-selection-item {
+    color: white !important;
+  }
+}
+.ant-select-arrow {
+  color: white !important;
+}
+.ant-select-item-option {
+  color: #fff !important;
+}
+
+.ant-select-item-option-active:not(.ant-select-item-option-selected) {
+  background-color: #2f3438 !important;
+}
+
+.ant-select-item-option-selected {
+  background-color: #3a3f44 !important;
+  color: #fff !important;
+}
+
+.ant-select-item-option-selected.ant-select-item-option-active {
+  background-color: #26292b !important;
+}
+.rc-virtual-list-holder-inner {
+  background-color: #3a3f44 !important;
+  border-color: #3a3f44 !important;
+}
+.ant-select-dropdown {
+  background-color: #3a3f44 !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: #3a3f44 !important;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: 0.5s ease;
